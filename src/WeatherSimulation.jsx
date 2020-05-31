@@ -3,8 +3,8 @@ import Node from './Node';
 import './WeatherSimulation.css';
 
 
-let number_of_rows = 15;
-let number_of_columns = 40;
+const TOTAL_N_OF_ROWS = 10;
+const TOTAL_N_OF_COLS = 10;
 
 export default class WeatherSimulation extends Component {
 
@@ -17,9 +17,9 @@ export default class WeatherSimulation extends Component {
 
     componentDidMount() {
         const nodes = [];
-        for(let row = 0; row < number_of_rows; row++) {
+        for(let row = 0; row < TOTAL_N_OF_ROWS; row++) {
             const currentRow = [];
-            for(let column = 0; column < number_of_columns; column++) {
+            for(let column = 0; column < TOTAL_N_OF_COLS; column++) {
                 currentRow.push([]);
             }
             nodes.push(currentRow);
@@ -34,9 +34,19 @@ export default class WeatherSimulation extends Component {
         return (
             <div className="grid">
                 {nodes.map((row, rowIdx) => {
-                    return <div>
-                        {row.map((node, nodeIdx) => <Node></Node>)}
-                    </div>
+                    return (
+                        <div key={rowIdx}>
+                        {row.map((node, rowIdx) => {
+                            const {typeOfNode} = node;
+                            return (
+                                <Node
+                                    typeOfNode={'air'}
+                                ></Node>
+                            );
+
+                        })}
+                        </div>
+                    )
                 })}
             </div>
         );

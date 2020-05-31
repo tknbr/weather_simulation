@@ -4,3 +4,15 @@
   outline: 1px solid rgb(175, 216, 248);
   display: inline-block;
 }
+
+.node_soil {
+    background-color: rgb(139, 69, 19);
+}
+
+.node_water {
+    background-color: rgb(30, 144, 250);
+}
+
+.node_air {
+    background-color: rgb(175, 216, 248);
+}
