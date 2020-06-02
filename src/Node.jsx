@@ -18,9 +18,12 @@ export default class Node extends Component {
 
     render() {
         const {
-            //row,
-            //col,
+            row,
+            col,
             typeOfNode,
+            onMouseDown,
+            onMouseEnter,
+            onMouseUp,
         } = this.props;
 
         let extraClassName = '';
@@ -42,6 +45,9 @@ export default class Node extends Component {
         return(
             <div
                 className={extraClassName}
+                onMouseDown={() => onMouseDown(row, col)}
+                onMouseEnter={() => onMouseEnter(row, col)}
+                onMouseUp={() => onMouseUp()}
             ></div>
 
         );
