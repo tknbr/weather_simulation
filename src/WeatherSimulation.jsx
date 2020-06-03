@@ -4,7 +4,7 @@ import './WeatherSimulation.css';
 
 
 const TOTAL_N_OF_ROWS = 10;
-const TOTAL_N_OF_COLS = 30;
+const TOTAL_N_OF_COLS = 15;
 
 export default class WeatherSimulation extends Component {
 
@@ -36,11 +36,22 @@ export default class WeatherSimulation extends Component {
         this.setState({mouseIsPressed: false});
     }
 
+    weatherSim() {
+        // compute one iteration
+
+        // update view
+
+    }
+
     render() {
         const {grid} = this.state;
         console.log(grid);
 
         return (
+            <>
+            <button onClick={() => this.weatherSim()}>
+              Start
+            </button>
             <div className="grid">
                 {grid.map((row, rowIdx) => {
                     return (
@@ -65,6 +76,7 @@ export default class WeatherSimulation extends Component {
                     )
                 })}
             </div>
+            </>
         );
     }
 }
