@@ -37,10 +37,30 @@ export default class WeatherSimulation extends Component {
     }
 
     weatherSim() {
-        // compute one iteration
+        // initialize variables for simulation
+        //  variable to track day/night (0-6 night, 6-21 day, 21-24 night)?
+        let hour = 0;
+        let total_n_days = 10;
 
-        // update view
+        //  variable to track nodes to update
+        let nodesToUpdate = [];
 
+        // we start at night so we check for water, set wind forces acording to time of day
+        // and push them to nodesToUpdate
+
+        while (total_n_days >= 0) {
+            // compute one iteration
+
+            // update view
+
+            // update hours/total_remaining_days
+            if (++hour > 23) {
+                hour = 0;
+                --total_n_days;
+            }
+        }
+
+        console.log("simulation finished");
     }
 
     render() {
@@ -81,7 +101,9 @@ export default class WeatherSimulation extends Component {
     }
 }
 
+
 const initializeGrid = () => {
+    // set initial grid state
     const nodes = [];
     for(let row = TOTAL_N_OF_ROWS-1; row >= 0 ; row--) {
         const currentRow = [];
@@ -97,20 +119,42 @@ const createNode = (col, row) => {
     return {
         row,
         col,
-        typeOfNode: row < (TOTAL_N_OF_ROWS/4) ? 'water' : 'air',
+        typeOfNode: row < TOTAL_N_OF_ROWS/4 ? 'water' : 'air',
     }
 }
 
 const getNewGridWithSoilToggled = (grid, row, col) => {
     const newGrid = grid.slice();
 
-    for (let r = TOTAL_N_OF_ROWS-1-row; r < TOTAL_N_OF_ROWS; r++) {
-        const node = newGrid[r][col];
-        const newNode = {
-            ...node,
-            typeOfNode: 'soil',
-        };
-        newGrid[r][col] = newNode;
+    // check for type of node clicked
+    let node = newGrid[TOTAL_N_OF_ROWS-1-row][col];
+    switch (node.typeOfNode) {
+        case "water":
+        case "air":
+            for (let r = TOTAL_N_OF_ROWS-1-row; r < TOTAL_N_OF_ROWS; r++) {
+                node = newGrid[r][col];
+                const newNode = {
+                    ...node,
+                    typeOfNode: 'soil',
+                };
+                newGrid[r][col] = newNode;
+            }
+            break;
+        case "soil":
+            for (let r = TOTAL_N_OF_ROWS-1-row; r >= 0; r--) {
+                node = newGrid[r][col];
+                console.log("r= " + r + " (3*TOTAL_N_OF_ROWS)/4 = " + (3*TOTAL_N_OF_ROWS)/4)
+                const newNode = {
+                    ...node,
+                    typeOfNode: r >= Math.floor((3*TOTAL_N_OF_ROWS)/4) ? 'water' : 'air',
+                };
+                newGrid[r][col] = newNode;
+            }
+            break;
+        default:
+            console.log("Should never reach this point");
+            break;
+
     }
     return newGrid;
 };
