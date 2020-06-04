@@ -21,6 +21,10 @@ export default class Node extends Component {
             row,
             col,
             typeOfNode,
+            windNorth,
+            windSouth,
+            windEast,
+            windWest,
             onMouseDown,
             onMouseEnter,
             onMouseUp,
@@ -36,6 +40,9 @@ export default class Node extends Component {
                 break;
             case 'soil':
                 extraClassName = `node node_soil`;
+                break;
+            case 'cloud':
+                extraClassName = `node node_cloud`;
                 break;
             default:
                 extraClassName = `node node_air`;

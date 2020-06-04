@@ -46,7 +46,16 @@ export default class WeatherSimulation extends Component {
         let nodesToUpdate = [];
 
         // we start at night so we check for water, set wind forces acording to time of day
-        // and push them to nodesToUpdate
+        for(let i = 0; i < TOTAL_N_OF_COLS; ++i) {
+            if (this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)][i].typeOfNode === "water") {
+                // set wind forces
+                this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)-1][i].windNorth = 1;
+                this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)-1][i].windEast = 1;
+                this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)-1][i].windWest = 1;
+
+                nodesToUpdate.push(this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)-1][i]);
+            }
+        }
 
         while (total_n_days >= 0) {
             // compute one iteration
@@ -83,6 +92,10 @@ export default class WeatherSimulation extends Component {
                                     row={row}
                                     col={col}
                                     typeOfNode={typeOfNode}
+                                    windNorth={0}
+                                    windSouth={0}
+                                    windEast={0}
+                                    windWest={0}
                                     onMouseDown={(row, col) => this.handleMouseDown(row, col)}
                                     onMouseEnter={(row, col) =>
                                         this.handleMouseEnter(row, col)
