@@ -47,6 +47,8 @@ export default class WeatherSimulation extends Component {
 
         // we start at night so we check for water, set wind forces acording to time of day
         for(let i = 0; i < TOTAL_N_OF_COLS; ++i) {
+            // this should be fixed. instead of  adding weight to wind we should create preasure by
+            // adding -1
             if (this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)][i].typeOfNode === "water") {
                 // set wind forces
                 this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)-1][i].windNorth = 1;
