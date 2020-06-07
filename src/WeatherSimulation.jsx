@@ -45,19 +45,18 @@ export default class WeatherSimulation extends Component {
         //  variable to track nodes to update
         let nodesToUpdate = [];
 
-        // we start at night so we check for water, set wind forces acording to time of day
-        for(let i = 0; i < TOTAL_N_OF_COLS; ++i) {
-            // this should be fixed. instead of  adding weight to wind we should create preasure by
-            // adding -1
-            if (this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)][i].typeOfNode === "water") {
-                // set wind forces
-                this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)-1][i].windNorth = 1;
-                this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)-1][i].windEast = 1;
-                this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)-1][i].windWest = 1;
-
-                nodesToUpdate.push(this.state.grid[Math.floor((3*TOTAL_N_OF_ROWS)/4)-1][i]);
+        // first create a case where there is no night or day. Lets asume it's always sunny and try to figure out the wind
+        // we know that sun affects land in between (3*TOTAL_N_OF_ROWS)/4 & TOTAL_N_OF_ROWS/4
+        for (let currentRow = Math.floor(TOTAL_N_OF_ROWS/4); currentRow <= Math.floor((3*TOTAL_N_OF_ROWS)/4); currentRow++) {
+            for (let currentCol = 0; currentCol < TOTAL_N_OF_COLS; ++currentCol) {
+                if (this.state.grid[currentRow][currentCol].typeOfNode === "air" && this.state.grid[currentRow+1][currentCol].typeOfNode === "soil") {
+                    nodesToUpdate.push(this.state.grid[currentRow][currentCol]);
+                    console.log("low preasure point at " + currentRow + " " + currentCol);
+                    document.getElementById(`node-${TOTAL_N_OF_ROWS-1-currentRow}-${currentCol}`).className = 'node node_cloud';
+                }
             }
         }
+
 
         while (total_n_days >= 0) {
             // compute one iteration
@@ -87,10 +86,11 @@ export default class WeatherSimulation extends Component {
                 {grid.map((row, rowIdx) => {
                     return (
                         <div key={rowIdx}>
-                        {row.map((node, rowIdx) => {
+                        {row.map((node, nodeIdx) => {
                             const {row, col, typeOfNode} = node;
                             return (
                                 <Node
+                                    key={nodeIdx}
                                     row={row}
                                     col={col}
                                     typeOfNode={typeOfNode}
