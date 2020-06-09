@@ -45,18 +45,51 @@ export default class WeatherSimulation extends Component {
         //  variable to track nodes to update
         let nodesToUpdate = [];
 
+        //  auxiliar grid used to track progress
+        const grid = this.state.grid.slice();
+
         // first create a case where there is no night or day. Lets asume it's always sunny and try to figure out the wind
         // we know that sun affects land in between (3*TOTAL_N_OF_ROWS)/4 & TOTAL_N_OF_ROWS/4
         for (let currentRow = Math.floor(TOTAL_N_OF_ROWS/4); currentRow <= Math.floor((3*TOTAL_N_OF_ROWS)/4); currentRow++) {
             for (let currentCol = 0; currentCol < TOTAL_N_OF_COLS; ++currentCol) {
-                if (this.state.grid[currentRow][currentCol].typeOfNode === "air" && this.state.grid[currentRow+1][currentCol].typeOfNode === "soil") {
-                    nodesToUpdate.push(this.state.grid[currentRow][currentCol]);
-                    console.log("low preasure point at " + currentRow + " " + currentCol);
+                if (grid[currentRow][currentCol].typeOfNode === "air" && grid[currentRow+1][currentCol].typeOfNode === "soil") {
+                    grid[currentRow][currentCol].windNorth = 1;
+                    nodesToUpdate.push(grid[currentRow][currentCol]);
                     document.getElementById(`node-${TOTAL_N_OF_ROWS-1-currentRow}-${currentCol}`).className = 'node node_cloud';
                 }
             }
         }
 
+        while (nodesToUpdate.length > 0) {
+            let node = nodesToUpdate.shift();
+            console.log(node);
+            let balance = nodeBalance(node);
+            if (balance === 0){
+                // node is balanced, do nothing
+                continue;
+            } else if (balance > 0) {
+                // node has high preasure
+            } else {
+                // node has low preasure
+                switch (getLowPreasureSource(grid, node.row, node.col)) {
+                    case 'north':
+                        // north is the source
+                        break;
+                    case 'south':
+                        // south is the source
+                        break;
+                    case 'east':
+                        // east is the source
+                        break;
+                    case 'west':
+                        // west is the source
+                        break;
+                    default:
+                        // none is the source
+                        break;
+                }
+            }
+        }
 
         while (total_n_days >= 0) {
             // compute one iteration
@@ -172,4 +205,19 @@ const getNewGridWithSoilToggled = (grid, row, col) => {
 
     }
     return newGrid;
-};
+}
+
+const nodeBalance = (node) => {
+    let sumOfWinds = node.windNorth + node.windSouth + node.windWest + node.windEast;
+    if (sumOfWinds > 0) {
+        return 1;
+    } else if (sumOfWinds < 0) {
+        return -1;
+    } else {
+        return 0;
+    }
+}
+
+const getLowPreasureSource = (grid, row, col) => {
+    return 'none';
+}
